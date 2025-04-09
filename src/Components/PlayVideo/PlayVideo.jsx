@@ -25,10 +25,16 @@ const PlayVideo = () => {
     }
 
     const fetchOtheerData = async () =>{
+        // Ensure apiData is available before fetching
+        if (!apiData) {
+            return;
+        }
 
+        // Fetch Channel Data
         const channelData_url = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2C%20contentDetails%2C%20statistics&id=${apiData.snippet.channelId}&key=${API_KEY}`;
         await fetch(channelData_url).then(res=>res.json()).then(data=>setChannelData(data.items[0]))
 
+        // Fetch Comment Data
         const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=50&videoId=${videoId}&key=${API_KEY}`
         await fetch(comment_url).then(res=>res.json()).then(data=>setCommentData(data.items))
     }
@@ -38,7 +44,7 @@ const PlayVideo = () => {
     },[videoId])
 
     useEffect(()=>{
-        fetchOtheerData
+        fetchOtheerData(); // Call the function
     },[apiData])
 
 
